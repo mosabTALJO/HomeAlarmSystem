@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "680502403568",
+    "firebase_url": "https://smarthomealarm-2a78d-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "smarthomealarm-2a78d",
+    "storage_bucket": "smarthomealarm-2a78d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680502403568:android:e0eb920db1cd351d55fd35",
+        "android_client_info": {
+          "package_name": "com.example.home_alarm_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWUEsxWxR9A2KxnOTGMkNPsuyK72O84gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
