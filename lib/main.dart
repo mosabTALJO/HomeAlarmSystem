@@ -9,32 +9,44 @@ import 'package:firebase_database/firebase_database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // 1. Initialize Firebase first
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  // 2. Request Notification Permissions and get the FCM Token
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  NotificationSettings settings = await messaging.requestPermission();
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    // Grab the unique token for this specific device
-    String? token = await messaging.getToken();
-    
-    if (token != null) {
-      // Save it directly to the database so the Cloud Function can find it
-      DatabaseReference ref = FirebaseDatabase.instance.ref("AlarmSystem/fcmToken");
-      await ref.set(token);
-      print("FCM Token saved to database successfully!");
-    }
-  } else {
-    print("User declined or has not accepted notification permissions");
+  try {
+    // 1. Initialize Firebase first
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint("Firebase initialization failed: $e");
   }
 
-  // 3. Run the App UI
+  // 2. Run the App UI immediately
   runApp(const HomeAlarmApp());
+
+  // 3. Request Notification Permissions and get the FCM Token in the background
+  _initializeNotifications();
+}
+
+Future<void> _initializeNotifications() async {
+  try {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission();
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      // Grab the unique token for this specific device
+      String? token = await messaging.getToken();
+      
+      if (token != null) {
+        // Save it directly to the database so the Cloud Function can find it
+        DatabaseReference ref = FirebaseDatabase.instance.ref("AlarmSystem/fcmToken");
+        await ref.set(token);
+        debugPrint("FCM Token saved to database successfully!");
+      }
+    } else {
+      debugPrint("User declined or has not accepted notification permissions");
+    }
+  } catch (e) {
+    debugPrint("Error initializing notifications: $e");
+  }
 }
 
 class HomeAlarmApp extends StatelessWidget {
